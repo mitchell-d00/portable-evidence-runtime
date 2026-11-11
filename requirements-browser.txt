@@ -1,0 +1,2 @@
+# Optional automation dependency; the HTML apps have no package dependencies.
+playwright==1.62.0

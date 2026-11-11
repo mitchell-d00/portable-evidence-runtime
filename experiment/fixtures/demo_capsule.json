@@ -1,0 +1,100 @@
+{
+  "format": "portable-evidence-capsule/1",
+  "policy": {
+    "answer_mode": "exact-key",
+    "allowed_status": [
+      "current"
+    ],
+    "allowed_origin": [
+      "human"
+    ],
+    "ambiguous": "refuse"
+  },
+  "records": [
+    {
+      "body": {
+        "id": "AI-001",
+        "key": "machine-claim",
+        "value": "Synthetic machine-origin draft; never authoritative.",
+        "status": "current",
+        "origin": "machine",
+        "revision": 1,
+        "supersedes": null
+      },
+      "sha256": "7f9226177366ff2c55c60020c83db1d70c01679d906c839122d4e56324e97b71"
+    },
+    {
+      "body": {
+        "id": "CONFLICT-A",
+        "key": "conflicting-answer",
+        "value": "Synthetic candidate A.",
+        "status": "current",
+        "origin": "human",
+        "revision": 1,
+        "supersedes": null
+      },
+      "sha256": "5a130c870da91f1157e54c38c7cc19a420b4caac5fa0526c5e3406afc88b49cd"
+    },
+    {
+      "body": {
+        "id": "CONFLICT-B",
+        "key": "conflicting-answer",
+        "value": "Synthetic candidate B.",
+        "status": "current",
+        "origin": "human",
+        "revision": 1,
+        "supersedes": null
+      },
+      "sha256": "5e71b8ecced546cc837a0986dd0d6466ccd100b097a9f9cb435c17b7889f55af"
+    },
+    {
+      "body": {
+        "id": "KILN-000",
+        "key": "kiln-schedule",
+        "value": "Retired synthetic example: 200 C per hour.",
+        "status": "retired",
+        "origin": "human",
+        "revision": 1,
+        "supersedes": null
+      },
+      "sha256": "19353f66ee193358f4259ffed53be9cae0bd6943b22cd690843be2a19f401ace"
+    },
+    {
+      "body": {
+        "id": "KILN-001",
+        "key": "kiln-schedule",
+        "value": "Synthetic laboratory schedule: 100 C per hour to 1000 C. Not operational kiln advice.",
+        "status": "current",
+        "origin": "human",
+        "revision": 2,
+        "supersedes": "KILN-000"
+      },
+      "sha256": "8c2cbe7453ed025b05ec1f0bbad67d6a7f388bc5629b1668ea3d92268f0b2e08"
+    },
+    {
+      "body": {
+        "id": "LAB-001",
+        "key": "lab-rule",
+        "value": "Every eligible page must match its recorded digest and fixed policy.",
+        "status": "current",
+        "origin": "human",
+        "revision": 1,
+        "supersedes": null
+      },
+      "sha256": "08ec29679ddec6c4d52c0b6c5387613c76d63d31015380d1af3165331804738d"
+    },
+    {
+      "body": {
+        "id": "PRIVATE-001",
+        "key": "blocked-note",
+        "value": "This is an intentionally blocked laboratory example.",
+        "status": "blocked",
+        "origin": "human",
+        "revision": 1,
+        "supersedes": null
+      },
+      "sha256": "87e3738e4d6633646fb391bb943317eca4cca61727ef113b2af6d641ec7a05f4"
+    }
+  ],
+  "root_sha256": "d5f492fb09430bb1065a20bf213d51fafbed5dc9158d3fa9b95b5a4ae89bdc83"
+}

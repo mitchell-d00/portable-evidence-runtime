@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; base-uri 'none'; form-action 'none'"><title>Portable Evidence Runtime</title><style>
+:root{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#182737;background:#f4f6f7;font-size:16px}
+*{box-sizing:border-box} body{margin:0;line-height:1.55} .wrap{max-width:1130px;margin:auto;padding:32px 22px 60px}
+a{color:#175f7b} .top{border-top:7px solid #1c596e;background:#102b39;color:#fff} .top .wrap{padding-top:32px;padding-bottom:28px}
+h1{font-size:clamp(1.9rem,3.8vw,3rem);margin:4px 0 6px;letter-spacing:-.04em;line-height:1.12}h2{font-size:1.28rem;margin:0 0 15px}h3{font-size:1rem;margin:18px 0 6px}p{margin:0 0 10px}.kicker{color:#96d0db;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;font-weight:750}.intro{max-width:750px;color:#d7e4e9}.eyebrow{font-size:.77rem;text-transform:uppercase;letter-spacing:.08em;font-weight:750;color:#456575}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.stat{background:#204454;border:1px solid #446575;border-radius:8px;padding:9px 14px;font-size:.85rem}.stat strong{font-size:1.2rem;display:block}
+main{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:24px}.panel{background:white;border-radius:12px;padding:21px;border:1px solid #d6e1e5;box-shadow:0 2px 11px #102b3908;min-width:0}
+.full{grid-column:1/-1}.muted{color:#587080;font-size:.9rem}.note{padding:11px 13px;background:#ecf6f7;border-left:3px solid #3b8d9e;border-radius:3px;margin:10px 0 15px}
+label{display:block;font-weight:650;font-size:.83rem;margin:11px 0 4px}.hint{font-size:.79rem;color:#667984;margin-bottom:4px}
+input,select,textarea{display:block;width:100%;padding:10px 11px;border:1px solid #b9cad0;background:#fff;border-radius:7px;font:inherit;color:#182737;min-width:0}textarea{resize:vertical;min-height:74px}textarea:focus,input:focus,select:focus{outline:3px solid #d0ecf0;border-color:#26677a}
+button{cursor:pointer;background:#17627c;color:#fff;border:1px solid #17627c;border-radius:7px;padding:9px 14px;font-weight:700;font:inherit;font-size:.9rem}button:hover{background:#114f65}button.secondary{background:#fff;color:#175b70}button.secondary:hover{background:#eaf2f5}button.danger{color:#923b30;border-color:#dfc2bb;background:#fff}button.danger:hover{background:#faf0ee}button:focus-visible{outline:3px solid #97d7ed}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.two{display:grid;grid-template-columns:1fr 1fr;gap:11px}.result{background:#f0f5f6;border:1px solid #d9e6e8;border-radius:8px;padding:12px;min-height:72px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ok{border-left:5px solid #278169}.bad{border-left:5px solid #b55a40}.record{border-top:1px solid #e5ecef;padding:10px 0}.record:first-child{border:0}.record-head{display:flex;justify-content:space-between;gap:10px}.record small{color:#657985;display:block}.tag{background:#e7f2f3;color:#17566e;font-size:.7rem;border-radius:100px;padding:3px 9px;white-space:nowrap;height:fit-content;font-weight:700}.tag.bad{background:#fae9e6;color:#a84338;border:0}.tag.dim{background:#eceef0;color:#505c69}.mono{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;word-break:break-all;font-size:.82rem}.foot{margin-top:22px;color:#586d77;font-size:.82rem}.file-input{display:none}.subhead{font-size:.85rem;font-weight:750;margin:13px 0 4px}.hidden{display:none}
+@media(max-width:790px){main{grid-template-columns:1fr}.wrap{padding-left:15px;padding-right:15px}.panel{padding:16px}.two{grid-template-columns:1fr}}
+@media print{body{background:#fff}.panel{box-shadow:none}button{display:none}}
+
+</style></head><body>
+<header class="top"><div class="wrap"><div class="kicker">Offline-first reference implementation · PER v0.1</div><h1>Portable Evidence Runtime</h1><p class="intro">Memory + rules + verification + executable reader in one transportable file. Work offline. Export the ledger. Reopen it in a fresh session. Refuse evidence that fails the declared checks.</p><div class="stats"><div class="stat"><strong id="count-pages">0</strong>Pages</div><div class="stat"><strong id="count-current">0</strong>Eligible</div><div class="stat"><strong id="count-blocked">0</strong>Blocked or retired</div><div class="stat"><strong>0</strong>Required network calls</div></div></div></header>
+<div class="wrap"><div class="note">This is a deliberately small, deterministic experiment - not a general-purpose AI or a claim that a hash proves factual truth. It has no server, API calls, downloads from CDNs, or required AI provider. Open this file directly from disk.</div>
+<main>
+<section class="panel"><div class="eyebrow">01 · Reader</div><h2>Ask from the sealed ledger</h2><p class="muted">Use exact subject + predicate fields. This narrow grammar is intentional; it prevents invented answers.</p><label for="q-subject">Subject</label><input id="q-subject" value="Kiln A" maxlength="140"><label for="q-predicate">Predicate</label><input id="q-predicate" value="maximum temperature" maxlength="140"><label for="selected-id">Optional exact page selection</label><select id="selected-id"></select><div class="actions"><button id="ask">Check supported answer</button></div><div class="subhead">Evidence-gated result</div><div id="answer" class="result" role="status" aria-live="polite"></div></section>
+<section class="panel"><div class="eyebrow">02 · Mobility</div><h2>Take everything with you</h2><p>Save <strong>this index.html</strong> and your <strong>ledger.json</strong> together. Open them on another device or fresh browser profile; the reader remains runnable without a cloud account.</p><div class="actions"><button id="export">Export ledger JSON</button><button class="secondary" id="import-button">Import ledger JSON</button><button class="danger" id="reset">Restore sample</button><input id="import-file" class="file-input" type="file" accept=".json,application/json" aria-label="Select ledger JSON"></div><p class="muted" id="storage-info" style="margin-top:12px">Browser local storage is a convenience, not the transport format. Keep exported backups.</p><div class="note">Integrity is not authenticity: a person who can edit the page and recompute its SHA-256 can create a newly sealed record. Signatures, external trust, and hostile-host isolation are outside this prototype.</div></section>
+<section class="panel"><div class="eyebrow">03 · Authoring</div><h2>Add a sealed page</h2><div class="two"><div><label for="id">Unique page ID</label><input id="id" placeholder="KILN-002" maxlength="64"></div><div><label for="kind">Kind</label><select id="kind"><option value="source">Source</option><option value="derived">Pinned derivative</option></select></div></div><label for="title">Title</label><input id="title" placeholder="Revised kiln note" maxlength="160"><label for="scope">Declared scope</label><input id="scope" value="local" maxlength="100"><div id="supersedes-wrap"><label for="supersedes">Supersede a prior source (optional)</label><select id="supersedes"></select></div><div class="hidden" id="parent-wrap"><label for="parent">Pinned parent (required for derivative)</label><select id="parent"></select></div><label for="body">Page text</label><textarea id="body" placeholder="Exact text that is covered by the seal"></textarea><label for="facts">Structured evidence · one fact per line</label><div class="hint">subject | predicate | value</div><textarea id="facts" placeholder="Kiln A | maximum temperature | 850 C"></textarea><div class="actions"><button id="add">Add + seal page</button></div><div id="message" class="result" role="status" aria-live="polite" style="margin-top:12px">Ready.</div></section>
+<section class="panel"><div class="eyebrow">04 · Inspection</div><h2>Local corpus</h2><div id="records"></div></section>
+</main><footer class="foot">Portable Evidence Runtime · Mitchell D. McPhetridge · local research implementation. Local behavior can be independently tested using the repository experiment harness.</footer></div>
+<script>
+/* Portable Evidence Runtime - reference engine. No network APIs. Experimental local authoring mode. */
+(function (root) {
+  'use strict';
+  const FORMAT = 'PER-LEDGER-1';
+  const MAX_RECORDS = 500;
+  const MAX_JSON_BYTES = 2_000_000;
+  const ID_RE = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
+  const K = [
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+  ];
+  function rotr(x, n) { return (x >>> n) | (x << (32-n)); }
+  function utf8(input) {
+    if (typeof TextEncoder !== 'undefined') return Array.from(new TextEncoder().encode(input));
+    const encoded = unescape(encodeURIComponent(input));
+    return Array.from(encoded, c => c.charCodeAt(0));
+  }
+  function sha256(input) {
+    if (typeof input !== 'string') throw new TypeError('hash input must be a string');
+    const bytes = utf8(input);
+    const bitLenHi = Math.floor(bytes.length / 0x20000000);
+    const bitLenLo = (bytes.length * 8) >>> 0;
+    bytes.push(0x80);
+    while (bytes.length % 64 !== 56) bytes.push(0);
+    for (let shift = 24; shift >= 0; shift -= 8) bytes.push((bitLenHi >>> shift) & 255);
+    for (let shift = 24; shift >= 0; shift -= 8) bytes.push((bitLenLo >>> shift) & 255);
+    const H = [0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+    for (let off = 0; off < bytes.length; off += 64) {
+      const w = new Array(64);
+      for (let i=0; i<16; i++) {
+        const j=off+i*4;
+        w[i]=((bytes[j]<<24)|(bytes[j+1]<<16)|(bytes[j+2]<<8)|bytes[j+3])>>>0;
+      }
+      for(let i=16;i<64;i++) {
+        const a=w[i-15], b=w[i-2];
+        const s0=rotr(a,7)^rotr(a,18)^(a>>>3);
+        const s1=rotr(b,17)^rotr(b,19)^(b>>>10);
+        w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
+      }
+      let [a,b,c,d,e,f,g,h]=H;
+      for(let i=0;i<64;i++) {
+        const s1=rotr(e,6)^rotr(e,11)^rotr(e,25);
+        const ch=(e&f)^(~e&g);
+        const t1=(h+s1+ch+K[i]+w[i])>>>0;
+        const s0=rotr(a,2)^rotr(a,13)^rotr(a,22);
+        const maj=(a&b)^(a&c)^(b&c);
+        const t2=(s0+maj)>>>0;
+        h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+      }
+      [a,b,c,d,e,f,g,h].forEach((x,i)=>{H[i]=(H[i]+x)>>>0;});
+    }
+    return H.map(x=>x.toString(16).padStart(8,'0')).join('');
+  }
+  function assertString(v, name, max, allowEmpty=false) {
+    if(typeof v!=='string' || v.length>max || (!allowEmpty && !v.trim())) throw new Error('invalid '+name);
+    return v;
+  }
+  function assertRef(ref, name) {
+    if(ref===null) return null;
+    if(!ref || typeof ref!=='object' || Array.isArray(ref) || Object.keys(ref).sort().join(',')!=='id,seal') throw new Error('invalid '+name);
+    if(!ID_RE.test(ref.id) || !/^[0-9a-f]{64}$/.test(ref.seal)) throw new Error('invalid '+name);
+    return {id:ref.id, seal:ref.seal};
+  }
+  function payload(input) {
+    if(!input || typeof input!=='object' || Array.isArray(input)) throw new Error('record must be object');
+    const keys=['id','kind','title','scope','body','facts','supersedes','parent'];
+    const actual=Object.keys(input).filter(k=>k!=='seal').sort().join(',');
+    if(actual!==keys.sort().join(',')) throw new Error('record fields must match schema');
+    if(!ID_RE.test(input.id)) throw new Error('invalid id');
+    if(!['source','derived'].includes(input.kind)) throw new Error('invalid kind');
+    const title=assertString(input.title,'title',160);
+    const scope=assertString(input.scope,'scope',100);
+    const body=assertString(input.body,'body',30000,true);
+    if(!Array.isArray(input.facts) || input.facts.length>50) throw new Error('invalid facts');
+    const facts=input.facts.map((f)=>{
+      if(!f || typeof f!=='object' || Array.isArray(f) || Object.keys(f).sort().join(',')!=='predicate,subject,value') throw new Error('invalid fact');
+      return {subject:assertString(f.subject,'subject',140),predicate:assertString(f.predicate,'predicate',140),value:assertString(f.value,'value',1000)};
+    });
+    const parent=assertRef(input.parent,'parent');
+    const supersedes=assertRef(input.supersedes,'supersedes');
+    if((input.kind==='derived')!==Boolean(parent)) throw new Error('derived pages require pinned parent; sources cannot have parents');
+    if(input.kind==='derived' && supersedes) throw new Error('this reference runtime supports supersession of source records only');
+    if(parent && (parent.id===input.id || supersedes?.id===input.id)) throw new Error('self reference');
+    if(supersedes && supersedes.id===input.id) throw new Error('self supersession');
+    return {id:input.id,kind:input.kind,title,scope,body,facts,supersedes,parent};
+  }
+  function makeRecord(input) {
+    const p=payload(input);
+    return Object.assign({},p,{seal:sha256(JSON.stringify(p))});
+  }
+  function verifyRecord(r) {
+    try {
+      if(!r || typeof r!=='object' || Object.keys(r).length!==9 || !/^[0-9a-f]{64}$/.test(r.seal)) return false;
+      const p=payload(r);
+      return sha256(JSON.stringify(p))===r.seal;
+    } catch(_e) {return false;}
+  }
+  function makeLedger(records) {
+    if(!Array.isArray(records) || records.length>MAX_RECORDS) throw new Error('too many records');
+    const l={format:FORMAT,records:records.slice()};
+    validateLedgerShape(l);
+    return l;
+  }
+  function validateLedgerShape(l) {
+    if(!l || typeof l!=='object' || Array.isArray(l) || Object.keys(l).sort().join(',')!=='format,records' || l.format!==FORMAT || !Array.isArray(l.records) || l.records.length>MAX_RECORDS) throw new Error('invalid ledger structure');
+    const ids=new Set();
+    for(const r of l.records){
+      if(!r || typeof r.id!=='string' || !ID_RE.test(r.id)) throw new Error('invalid record id');
+      if(ids.has(r.id)) throw new Error('duplicate id '+r.id);
+      ids.add(r.id);
+    }
+    return true;
+  }
+  function importLedger(json) {
+    if(typeof json!=='string' || utf8(json).length>MAX_JSON_BYTES) throw new Error('oversize or invalid input');
+    const l=JSON.parse(json);
+    validateLedgerShape(l);
+    // Do not silently reseal a tampered record. Its invalidity remains visible on retrieval.
+    return l;
+  }
+  function exportLedger(l) {validateLedgerShape(l);return JSON.stringify(l,null,2)+'\n';}
+  function getRecord(l,id) {return l.records.find(r=>r.id===id)||null;}
+  function validChain(l,r,seen=new Set()) {
+    if(!r || seen.has(r.id) || !verifyRecord(r)) return false;
+    const next=new Set(seen);next.add(r.id);
+    for(const ref of [r.parent,r.supersedes]){
+      if(!ref) continue;
+      const target=getRecord(l,ref.id);
+      if(!target || target.seal!==ref.seal || !validChain(l,target,next)) return false;
+    }
+    return true;
+  }
+  function validSuccessors(l,r) {
+    return l.records.filter(s=>s.kind==='source' && s.supersedes && s.supersedes.id===r.id && s.supersedes.seal===r.seal && validChain(l,s));
+  }
+  function eligible(l,id,seen=new Set()) {
+    const r=getRecord(l,id);
+    if(!r) return {ok:false,reason:'missing_record'};
+    if(seen.has(id)) return {ok:false,reason:'cycle'};
+    if(!validChain(l,r)) return {ok:false,reason:'invalid_seal_or_lineage'};
+    if(validSuccessors(l,r).length) return {ok:false,reason:'superseded'};
+    if(r.parent){
+      const p=eligible(l,r.parent.id,new Set([...seen,id]));
+      if(!p.ok) return {ok:false,reason:'stale_parent:'+p.reason};
+    }
+    return {ok:true,reason:'current',record:r};
+  }
+  function norm(s) {return s.trim().replace(/\s+/g,' ').toLocaleLowerCase('en');}
+  function query(l,subject,predicate,selectedId='') {
+    validateLedgerShape(l);
+    assertString(subject,'subject',140);assertString(predicate,'predicate',140);
+    if(selectedId && !ID_RE.test(selectedId)) throw new Error('invalid selected id');
+    const hits=[];const rejected=[];
+    const targetRecords=selectedId?[getRecord(l,selectedId)].filter(Boolean):l.records;
+    if(selectedId && !targetRecords.length) return {answer_supported:false,status:'return',reason:'missing_selected_record'};
+    for(const r of targetRecords){
+      const f=Array.isArray(r.facts)?r.facts.filter(f=>f && typeof f.subject==='string' && typeof f.predicate==='string' && norm(f.subject)===norm(subject) && norm(f.predicate)===norm(predicate)):[];
+      if(!f.length && !selectedId) continue;
+      const state=eligible(l,r.id);
+      if(!state.ok) {if(state.reason!=='superseded') rejected.push({id:r.id,reason:state.reason});continue;}
+      for(const fact of f) hits.push({record:r,fact});
+    }
+    if(rejected.length) return {answer_supported:false,status:'return',reason:'invalid_candidate',rejected};
+    if(!hits.length) return {answer_supported:false,status:'not_in_corpus',reason:'no_eligible_fact'};
+    const owners=new Set(hits.map(h=>h.record.id));
+    const values=new Set(hits.map(h=>norm(h.fact.value)));
+    if(owners.size!==1 || values.size!==1) return {answer_supported:false,status:'ambiguous',reason:'multiple_owners_or_values',owners:[...owners]};
+    const h=hits[0];
+    return {answer_supported:true,status:'supported',value:h.fact.value,subject:h.fact.subject,predicate:h.fact.predicate,source:{id:h.record.id,seal:h.record.seal,title:h.record.title,scope:h.record.scope,exact_fact:`${h.fact.subject} | ${h.fact.predicate} | ${h.fact.value}`}};
+  }
+  function emptyInputs(){return {id:'',kind:'source',title:'',scope:'local',body:'',facts:[],supersedes:null,parent:null};}
+  const api={FORMAT,sha256,makeRecord,verifyRecord,makeLedger,validateLedgerShape,importLedger,exportLedger,validChain,eligible,query,emptyInputs};
+  if(typeof module!=='undefined' && module.exports) module.exports=api;
+  root.PER=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
+
+</script><script>
+(function(){
+'use strict';
+const E=globalThis.PER;
+const $=(s)=>document.querySelector(s);
+const STORAGE_KEY='portable_evidence_runtime_v1';
+let ledger;
+function inputRecord(id,title,body,facts,scope='local',parent=null,supersedes=null,kind='source') {
+ return E.makeRecord({id,kind,title,scope,body,facts:facts.map(([subject,predicate,value])=>({subject,predicate,value})),supersedes,parent});
+}
+function demo(){
+ const a=inputRecord('KILN-001','Kiln operating note','Local demo page, authored for the portability experiment. The maximum operating temperature is 900 C.',[['Kiln A','maximum temperature','900 C'],['Kiln A','cooldown rule','Keep closed until below 100 C']]);
+ const b=inputRecord('LAB-001','Lab scope note','Demonstration policy: evidence does not establish source truth.',[['This archive','truth guarantee','No; the seal checks consistency, not authenticity or factual truth']]);
+ const c=inputRecord('KILN-DER-001','Derived kiln checklist','A derivative pinned to the exact source page. A valid replacement of the parent makes this derivative ineligible.',[['Kiln A','checklist','Check cooling status before opening']], 'local',{id:a.id,seal:a.seal},null,'derived');
+ return E.makeLedger([a,b,c]);
+}
+function save(){
+ try{localStorage.setItem(STORAGE_KEY,E.exportLedger(ledger));return true;}catch(e){$('#storage-info').textContent='Browser storage unavailable; export JSON to keep your work.';return false;}
+}
+function load(){try{const s=localStorage.getItem(STORAGE_KEY);return s?E.importLedger(s):demo();}catch(e){return demo();}}
+function fileDownload(name,data,type){const blob=new Blob([data],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function message(t,isBad=false){const e=$('#message');e.textContent=t;e.className='result'+(isBad?' bad':' ok');}
+function fieldFacts(s){return s.split(/\r?\n/).filter(x=>x.trim()).map((line,i)=>{const parts=line.split('|');if(parts.length!==3||parts.some(p=>!p.trim()))throw Error('Fact line '+(i+1)+' must be: subject | predicate | value');return parts.map(x=>x.trim());});}
+function render(){
+ $('#count-pages').textContent=ledger.records.length;
+ const current=ledger.records.filter(r=>E.eligible(ledger,r.id).ok).length;
+ $('#count-current').textContent=current;
+ $('#count-blocked').textContent=ledger.records.length-current;
+ const list=$('#records');list.replaceChildren();
+ for(const r of ledger.records){const status=E.eligible(ledger,r.id);const wrap=document.createElement('div');wrap.className='record';const head=document.createElement('div');head.className='record-head';const name=document.createElement('strong');name.textContent=r.title||r.id;const pill=document.createElement('span');pill.className='tag'+(status.ok?'':status.reason==='superseded'?' dim':' bad');pill.textContent=status.ok?'ELIGIBLE':status.reason.toUpperCase();head.append(name,pill);wrap.append(head);
+ const meta=document.createElement('small');meta.textContent=r.id+' · '+r.kind+' · '+r.scope+' · '+((r.facts||[]).length)+' fact(s)';wrap.append(meta);
+ const hash=document.createElement('small');hash.className='mono';hash.textContent='SHA-256 '+String(r.seal||'').slice(0,25)+'…';wrap.append(hash);list.append(wrap);}
+ for(const selector of ['#supersedes','#parent','#selected-id']){const node=$(selector);const old=node.value;node.replaceChildren();const first=document.createElement('option');first.value='';first.textContent=selector==='#selected-id'?'Automatic owner search':'None';node.append(first);
+ for(const r of ledger.records){if(selector==='#supersedes'&&r.kind!=='source')continue;const o=document.createElement('option');o.value=r.id;o.textContent=r.id+(E.eligible(ledger,r.id).ok?' (eligible)':' (blocked)');node.append(o);}node.value=old;}
+}
+function add(){try{
+ const id=$('#id').value.trim();if(ledger.records.some(r=>r.id===id))throw Error('The ID already exists. Use a new ID to add a revision.');
+ const kind=$('#kind').value;const supId=$('#supersedes').value;const parentId=$('#parent').value;
+ const ref=(v)=>v?({id:v,seal:ledger.records.find(r=>r.id===v)?.seal}):null;
+ const entry=E.makeRecord({id,kind,title:$('#title').value,scope:$('#scope').value,body:$('#body').value,facts:fieldFacts($('#facts').value).map(([subject,predicate,value])=>({subject,predicate,value})),supersedes:ref(supId),parent:ref(parentId)});
+ ledger=E.makeLedger(ledger.records.concat([entry]));save();render();ask();message('Page added and sealed. SHA-256: '+entry.seal);$('#id').value='';$('#title').value='';$('#body').value='';$('#facts').value='';
+ }catch(e){message(String(e.message),true);}}
+function ask(){try{
+ const answer=E.query(ledger,$('#q-subject').value,$('#q-predicate').value,$('#selected-id').value);
+ const out=$('#answer');out.className='result '+(answer.answer_supported?'ok':'bad');
+ out.textContent=answer.answer_supported?('SUPPORTED ANSWER: '+answer.value+'\n\nSource: '+answer.source.id+'\nExact evidence: '+answer.source.exact_fact+'\nSeal: '+answer.source.seal):('REFUSED: '+answer.status+'\nReason: '+answer.reason+(answer.rejected?'\nRejected pages: '+answer.rejected.map(x=>x.id+' ('+x.reason+')').join(', '):''));
+ }catch(e){$('#answer').className='result bad';$('#answer').textContent='ERROR: '+e.message;}}
+$('#add').addEventListener('click',add);
+$('#ask').addEventListener('click',ask);
+$('#export').addEventListener('click',()=>{fileDownload('per-ledger.json',E.exportLedger(ledger),'application/json');message('Ledger exported. Reimport it in a fresh browser profile to test recovery.');});
+$('#import-button').addEventListener('click',()=>$('#import-file').click());
+$('#import-file').addEventListener('change',async(e)=>{const f=e.target.files[0];if(!f)return;try{if(f.size>2_000_000)throw Error('file too large');const imported=E.importLedger(await f.text());ledger=imported;save();render();ask();message('Ledger imported without resealing. Corrupted records remain blocked by verification.');}catch(err){message('Import refused: '+err.message,true);}finally{e.target.value='';}});
+$('#reset').addEventListener('click',()=>{if(!confirm('Replace the current ledger with the demonstration pages? Export a backup first.'))return;ledger=demo();save();render();ask();message('Sample ledger restored.');});
+$('#kind').addEventListener('change',()=>{const derived=$('#kind').value==='derived';$('#parent-wrap').classList.toggle('hidden',!derived);$('#supersedes-wrap').classList.toggle('hidden',derived);if(derived){$('#supersedes').value='';}else{$('#parent').value='';}});
+ledger=load();save();render();ask();
+})();
+
+</script></body></html>

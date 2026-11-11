@@ -1,0 +1,9 @@
+[
+  {"id":"AI-001","key":"machine-claim","value":"Synthetic machine-origin draft; never authoritative.","status":"current","origin":"machine","revision":1,"supersedes":null},
+  {"id":"CONFLICT-A","key":"conflicting-answer","value":"Synthetic candidate A.","status":"current","origin":"human","revision":1,"supersedes":null},
+  {"id":"CONFLICT-B","key":"conflicting-answer","value":"Synthetic candidate B.","status":"current","origin":"human","revision":1,"supersedes":null},
+  {"id":"KILN-000","key":"kiln-schedule","value":"Retired synthetic example: 200 C per hour.","status":"retired","origin":"human","revision":1,"supersedes":null},
+  {"id":"KILN-001","key":"kiln-schedule","value":"Synthetic laboratory schedule: 100 C per hour to 1000 C. Not operational kiln advice.","status":"current","origin":"human","revision":2,"supersedes":"KILN-000"},
+  {"id":"LAB-001","key":"lab-rule","value":"Every eligible page must match its recorded digest and fixed policy.","status":"current","origin":"human","revision":1,"supersedes":null},
+  {"id":"PRIVATE-001","key":"blocked-note","value":"This is an intentionally blocked laboratory example.","status":"blocked","origin":"human","revision":1,"supersedes":null}
+]

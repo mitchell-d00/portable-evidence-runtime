@@ -1,0 +1,135 @@
+{
+  "experiment_id": "PER-SYNTHETIC-001",
+  "run_at_utc": "2026-11-11T14:59:48+00:00",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "fixture_sha256": "7cf219ddf91411f5ee065ec30a4cee381fea64c678f38c81f05411e788d71610",
+  "pinned_capsule_root_sha256": "d5f492fb09430bb1065a20bf213d51fafbed5dc9158d3fa9b95b5a4ae89bdc83",
+  "condition": "local self-contained exact-key capsule; deterministic synthetic scenarios",
+  "validation_type": "engineering feasibility, not external/clinical/scientific superiority test",
+  "n_cases": 15,
+  "n_passed": 15,
+  "all_passed": true,
+  "cases": [
+    {
+      "case": "valid_pinned",
+      "expected_status": "verification",
+      "observed_status": "verification",
+      "expected_support": true,
+      "observed_support": true,
+      "pass": true
+    },
+    {
+      "case": "exact_source",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "expected_support": true,
+      "observed_support": true,
+      "pass": true
+    },
+    {
+      "case": "retired_excluded",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "expected_support": true,
+      "observed_support": true,
+      "pass": true
+    },
+    {
+      "case": "machine_excluded",
+      "expected_status": "not_in_corpus",
+      "observed_status": "not_in_corpus",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "blocked_excluded",
+      "expected_status": "not_in_corpus",
+      "observed_status": "not_in_corpus",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "ambiguous_refused",
+      "expected_status": "ambiguous",
+      "observed_status": "ambiguous",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "unknown_refused",
+      "expected_status": "not_in_corpus",
+      "observed_status": "not_in_corpus",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "paraphrase_refused",
+      "expected_status": "invalid_key",
+      "observed_status": "invalid_key",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "value_corruption_refused",
+      "expected_status": "integrity_error",
+      "observed_status": "integrity_error",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "status_corruption_refused",
+      "expected_status": "integrity_error",
+      "observed_status": "integrity_error",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "policy_corruption_refused",
+      "expected_status": "integrity_error",
+      "observed_status": "integrity_error",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "root_corruption_refused",
+      "expected_status": "integrity_error",
+      "observed_status": "integrity_error",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "relocated_capsule",
+      "expected_status": "supported",
+      "observed_status": "supported",
+      "expected_support": true,
+      "observed_support": true,
+      "pass": true
+    },
+    {
+      "case": "rehashed_substitution_pin_refused",
+      "expected_status": "integrity_error",
+      "observed_status": "integrity_error",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    },
+    {
+      "case": "missing_all_bytes_refused",
+      "expected_status": "integrity_error",
+      "observed_status": "integrity_error",
+      "expected_support": false,
+      "observed_support": false,
+      "pass": true
+    }
+  ]
+}

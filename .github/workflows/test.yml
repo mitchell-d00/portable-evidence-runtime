@@ -1,0 +1,36 @@
+name: Local reference regression
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python scripts/release_manifest.py --check
+      - run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - run: node tests/test_browser_core.cjs
+      - run: node tests/test_authoring_core.cjs
+      - run: python scripts/run_experiment.py
+      - run: python tools/build.py --check
+      - run: python scripts/build_web.py --check
+      - run: python scripts/verify_release.py
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements-browser.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python scripts/browser_offline_probe.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-browser-results
+          path: experiment/results/

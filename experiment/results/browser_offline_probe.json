@@ -1,0 +1,75 @@
+{
+  "experiment_id": "PER-BROWSER-001",
+  "at_utc": "2026-11-11T14:56:31+00:00",
+  "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+  "browser": "Chromium 156.0.8078.79",
+  "offline_mode": true,
+  "load": "offline in-memory HTML; managed browser blocked file://",
+  "file_uri_load_confirmed": false,
+  "network_requests": [],
+  "n_cases": 13,
+  "n_passed": 13,
+  "all_passed": true,
+  "cases": [
+    {
+      "case": "strict_pinned_valid",
+      "pass": true,
+      "state": "ANCHORED: 7 records internally consistent",
+      "decision": "SUPPORTED \u00b7 Synthetic laboratory schedule: 100 C per hour to 1000 C. Not operational kiln advice.\n\nEvidence: KILN-001 \u00b7 rev 2\n8c2cbe7453ed025b05ec1f0b"
+    },
+    {
+      "case": "strict_ambiguous_refusal",
+      "pass": true,
+      "decision": "REFUSED \u00b7 ambiguous\nmultiple eligible owners"
+    },
+    {
+      "case": "strict_wrong_root_refusal",
+      "pass": true,
+      "decision": "REFUSED \u00b7 integrity_error\npinned root mismatch"
+    },
+    {
+      "case": "strict_missing_root_refusal",
+      "pass": true
+    },
+    {
+      "case": "strict_oversize_import_clears_answer",
+      "pass": true
+    },
+    {
+      "case": "strict_export_import_fresh_context",
+      "pass": true
+    },
+    {
+      "case": "strict_tampered_import_refusal",
+      "pass": true
+    },
+    {
+      "case": "authoring_demo_local_answer",
+      "pass": true,
+      "decision": "SUPPORTED ANSWER: 900 C\n\nSource: KILN-001\nExact evidence: Kiln A | maximum temperature | 900 C\nSeal: 6e20fcaf5bd4bac00e2c713ec8313d4ad20c7aac4438c07db"
+    },
+    {
+      "case": "authoring_import_refreshes_answer",
+      "pass": true
+    },
+    {
+      "case": "authoring_reset_refreshes_answer",
+      "pass": true
+    },
+    {
+      "case": "authoring_revision_refreshes_answer",
+      "pass": true
+    },
+    {
+      "case": "no_remote_requests",
+      "pass": true,
+      "requests": []
+    },
+    {
+      "case": "no_browser_script_errors",
+      "pass": true,
+      "errors": []
+    }
+  ],
+  "limitations": "managed Chromium policy blocks file:// and data: navigation; identical standalone HTML tested with set_content under offline network mode; physical direct-file test NOT verified"
+}
