@@ -1,0 +1,120 @@
+Validation and Publication Review
+
+Portable Evidence Runtime · 11 November 2026 · Review of version 0.2
+
+Assessment
+
+The revised manuscript is suitable for public discussion as an
+explicitly bounded research prototype and preprint. Its evidence
+supports deterministic behavior on synthetic fixtures in one Linux
+environment. It does not yet support a peer-reviewed validation claim,
+general platform compatibility, verified human authorship,
+natural-language reasoning, or comparative superiority.
+
+This is an engineering and editorial review performed during repository
+preparation. It is not independent peer review, a comprehensive security
+audit, or a legal opinion. Only one research manuscript was supplied;
+this companion document is a validation report.
+
+Provenance and reproducibility
+
+GitHub initially contained only a README at commit c516411. The
+implementation came from the author-supplied ZIP. Its SHA-256 matched
+the supplied receipt:
+
+    c0b52e403684938467edad2cd147408bc994be9b3ab5db95bc15139b8537fa22
+
+Text extracted from the separately supplied PDF matched text extracted
+from the ZIP’s manuscript PDF. The v0.2 manuscript revises that supplied
+source; it does not claim to be the unchanged attachment. The
+demonstration capsule and its root are unchanged.
+
+Executed checks
+
+  ------------------------------------------------------------------------
+  Check                          Local Scope
+                                result
+  -------------------------- --------- -----------------------------------
+  Python unittest discovery      29/29 25 original tests, three CLI tests
+                                       and one cross-language boundary
+                                       test
+
+  Shared boundary inputs         14/14 Python/JavaScript decisions and
+  within that test                     supported-answer evidence agree
+
+  Strict JavaScript core         11/11 SHA-256, fixed fixture, refusal and
+                                       embedded HTML checks
+
+  Authoring JavaScript core      10/10 Seals, supersession, pinned parent,
+                                       ambiguity and JSON round trip
+
+  Synthetic experiment           15/15 Declared statuses, supports and
+                                       expected source value/revision
+
+  Offline Chromium               13/13 Includes fresh-context transfer and
+  automation                           UI update regressions
+
+  Both standalone HTML          Passed Generated outputs match their
+  builds                               source inputs
+
+  CLI build, verify, ask and    Passed Temporary outputs, retained anchor
+  refusal checks                       and process exit behavior
+
+  Manuscript/report export      Passed Pandoc TXT and XeLaTeX PDF
+                                       generation
+  ------------------------------------------------------------------------
+
+The Chromium run used version 156.0.8078.79, Linux, and an offline
+browser context. Administrator policy blocked direct file:// navigation;
+the probe therefore loaded the identical standalone HTML into memory. No
+remote page requests or JavaScript errors were observed. A fresh browser
+context exercised export/import without shared browser storage. This is
+not a physical device transfer or proof of direct-file compatibility.
+Machine-readable observations are in experiment/results/.
+
+Corrections made during review
+
+-   Aligned Python and JavaScript policy field-order enforcement,
+    Unicode scalar validation, value-length accounting, safe revision
+    bounds, and exact-key/ID end-of-string matching. Added shared
+    boundary regression inputs.
+-   Cleared a previously supported strict-browser answer after an
+    oversized import. Refreshed authoring answers after imports,
+    revisions, and resetting the ledger.
+-   Made the declared relocation scenario actually copy and reread a
+    capsule. Added expected answer-value and revision assertions to
+    supported scenarios.
+-   Added a strict HTML build synchronization check. Strengthened
+    release checks to compare both builds, paper copies, and recorded
+    experiment outcomes.
+-   Added related work and explicit limits on historical novelty,
+    authorship metadata, optional unanchored API calls, and the
+    project-specific encoding.
+-   Made core-papers/ the canonical Markdown source and rebuilt all
+    requested formats; retained the original paper/ paths as generated
+    copies.
+
+Publication limits and remaining work
+
+1.  Independently reproduce direct-file cold transfer on a second device
+    and operating system, recording failures and user interventions.
+2.  Execute the proposed matched comparison before reporting
+    effectiveness or superiority. Synthetic pass rates do not estimate
+    real-world accuracy.
+3.  Extend conformance tests and security review before processing
+    hostile or sensitive corpora. This review is not exhaustive fuzzing
+    or formal proof.
+4.  Define authenticated anchor distribution and verifier distribution
+    before claiming identity or malicious-publisher protection. A root
+    shipped in the same editable HTML is a demo convenience, not an
+    independent trust channel.
+5.  Select explicit software and manuscript licenses if reuse is
+    intended. No license was supplied; public visibility alone does not
+    grant a reuse license. A license was not chosen on the author’s
+    behalf.
+6.  Expand the related-work review and seek external review for venue
+    submission.
+
+The paper should be described publicly as a working bounded reference
+prototype with local synthetic results and a proposed external
+evaluation. That description matches the present evidence.
